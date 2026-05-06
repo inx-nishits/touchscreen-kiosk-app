@@ -1,0 +1,115 @@
+/* 
+   CINEMATIC MOTION SYSTEM
+   Focus: Depth, Fluidity, and Impact
+*/
+
+/* Reveal Animations */
+.reveal-text {
+    overflow: hidden;
+    white-space: nowrap;
+    border-right: .15em solid var(--color-accent);
+    animation: 
+        typing 3.5s steps(40, end),
+        blink-caret .75s step-end infinite;
+}
+
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+@keyframes blink-caret {
+  from, to { border-color: transparent }
+  50% { border-color: var(--color-accent); }
+}
+
+/* Screen Transitions */
+.screen-enter {
+    animation: screen-enter 1.2s var(--ease-impact) forwards;
+}
+
+.screen-exit {
+    animation: screen-exit 0.8s var(--ease-standard) forwards;
+}
+
+@keyframes screen-enter {
+    from {
+        opacity: 0;
+        transform: scale(1.1) translateZ(0);
+        filter: blur(2vmax);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateZ(0);
+        filter: blur(0);
+    }
+}
+
+@keyframes screen-exit {
+    from {
+        opacity: 1;
+        transform: scale(1) translateZ(0);
+        filter: blur(0);
+    }
+    to {
+        opacity: 0;
+        transform: scale(0.95) translateZ(0);
+        filter: blur(1vmax);
+    }
+}
+
+/* Particle Motion */
+.particle-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+/* Glow Pulses */
+.inner-pulse {
+    animation: inner-pulse 2s infinite var(--ease-standard);
+    transform-origin: center;
+}
+
+@keyframes inner-pulse {
+    0% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.5); opacity: 0.2; }
+    100% { transform: scale(1); opacity: 0.8; }
+}
+
+/* Background Depth */
+.depth-layer {
+    transition: transform 0.1s ease-out;
+    will-change: transform;
+}
+
+/* Loading States */
+.loader-bar {
+    width: 20vmax;
+    height: 0.2vmax;
+    min-height: 2px;
+    background: rgba(255,255,255,0.1);
+    position: relative;
+    overflow: hidden;
+    margin-top: 1rem;
+}
+
+.loader-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: var(--color-accent);
+    animation: loading-slide 1.5s infinite var(--ease-standard);
+}
+
+@keyframes loading-slide {
+    0% { left: -100%; }
+    50% { left: 0; }
+    100% { left: 100%; }
+}

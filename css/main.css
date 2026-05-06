@@ -1,0 +1,473 @@
+:root {
+    /* Color Palette */
+    --color-bg: #000000;
+    --color-surface: #0a0a0a;
+    --color-accent: #d4af37; /* Luxury Gold */
+    --color-accent-glow: rgba(212, 175, 55, 0.3);
+    --color-text-primary: #ffffff;
+    --color-text-secondary: rgba(255, 255, 255, 0.6);
+    --color-error: #ff4d4d;
+    
+    /* Gradients */
+    --grad-dark: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 100%);
+    --grad-premium: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+    
+    /* Easing */
+    --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-out: cubic-bezier(0, 0, 0.2, 1);
+    --ease-in: cubic-bezier(0.4, 0, 1, 1);
+    --ease-impact: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+}
+
+body, html {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: var(--color-bg);
+    font-family: 'Outfit', 'Inter', sans-serif;
+    color: var(--color-text-primary);
+    cursor: auto; /* Re-enabled for testing */
+    font-size: clamp(14px, 1.5vmax, 24px); /* Fluid base font size for 4K compatibility */
+}
+
+/* Screens */
+.screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 1s var(--ease-standard), visibility 1s var(--ease-standard);
+    z-index: 10;
+    will-change: opacity, transform; /* GPU Optimization */
+}
+
+.screen.active {
+    opacity: 1;
+    visibility: visible;
+    z-index: 20;
+}
+
+/* Common Utilities */
+.fill-screen {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.video-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.video-overlay.dark-gradient {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--grad-dark);
+    pointer-events: none;
+}
+
+/* IDLE SCREEN */
+#screen-idle {
+    background: #000;
+    cursor: pointer;
+}
+
+.idle-content {
+    position: absolute;
+    bottom: 10%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    pointer-events: none;
+}
+
+.logo-text {
+    font-size: 5rem;
+    font-weight: 600;
+    letter-spacing: 0.5rem;
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+}
+
+.logo-text span {
+    font-weight: 300;
+    color: var(--color-accent);
+}
+
+.touch-callout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.pulse-text {
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.3rem;
+    color: var(--color-text-secondary);
+    animation: breathing 3s infinite ease-in-out;
+}
+
+.touch-icon {
+    width: 5vmax;
+    height: 5vmax;
+    min-width: 64px;
+    min-height: 64px;
+    color: var(--color-accent);
+}
+
+/* MAP SCREEN */
+.map-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #050505;
+}
+
+.map-base {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.8; /* Subtle dim to make hotspots pop */
+}
+
+.hotspot {
+    position: absolute;
+    width: 7vmax;
+    height: 7vmax;
+    min-width: 80px;
+    min-height: 80px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.2);
+    backdrop-filter: blur(10px);
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.4s var(--ease-impact);
+    z-index: 50;
+    
+    /* Continuous "Beacon" Animations */
+    animation: 
+        beacon-breathing 4s infinite ease-in-out,
+        beacon-floating 6s infinite ease-in-out;
+}
+
+/* Organic Offsets for each icon */
+.hotspot:nth-child(2n) { animation-delay: -1.5s; }
+.hotspot:nth-child(3n) { animation-delay: -2.2s; }
+.hotspot:nth-child(5n) { animation-delay: -3.8s; }
+
+@keyframes beacon-breathing {
+    0%, 100% { 
+        transform: scale(1); 
+        box-shadow: 0 0 20px rgba(255,255,255,0.1);
+    }
+    50% { 
+        transform: scale(1.08); 
+        box-shadow: 0 0 50px var(--color-accent-glow);
+        border-color: rgba(255,255,255,0.5);
+    }
+}
+
+@keyframes beacon-floating {
+    0%, 100% { translate: 0 0; }
+    50% { translate: 0 -1vmax; }
+}
+
+.hotspot-inner {
+    width: 80%;
+    height: 80%;
+    background-size: 200% 200%;
+    background-repeat: no-repeat;
+    border-radius: 50%;
+    transition: transform 0.4s var(--ease-impact);
+}
+
+/* ODD Styles (Heritage Icon 1) */
+.hotspot.odd {
+    box-shadow: 0 0 30px rgba(212, 175, 55, 0.2);
+    border-color: rgba(212, 175, 55, 0.4);
+}
+
+.hotspot.odd .hotspot-inner {
+    background-image: url('../assets/images/unnamed.png');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* EVEN Styles (Hagia-Sophia) */
+.hotspot.even {
+    box-shadow: 0 0 30px rgba(100, 200, 255, 0.2);
+    border-color: rgba(100, 200, 255, 0.4);
+}
+
+.hotspot.even .hotspot-inner {
+    background-image: url('../assets/images/Hagia-Sophia.png');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.hotspot:active {
+    transform: scale(1.1);
+    background: rgba(255,255,255,0.2);
+}
+
+.hotspot:active .hotspot-inner {
+    transform: scale(1.2);
+}
+
+.hotspot-pulse {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: var(--color-accent);
+    border-radius: 50%;
+    opacity: 0.5;
+    animation: hotspot-pulse 2s infinite;
+}
+
+.hotspot-label {
+    position: absolute;
+    top: 115%;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.15rem;
+    text-transform: uppercase;
+    color: var(--color-text-primary);
+    text-shadow: 0 0 10px rgba(0,0,0,0.8);
+    background: rgba(0,0,0,0.6);
+    padding: 0.4rem 0.8rem;
+    border-radius: 0.5rem;
+    backdrop-filter: blur(5px);
+    pointer-events: none;
+    border: 1px solid rgba(255,255,255,0.1);
+    z-index: 60;
+}
+
+/* Smart Label Positioning: Flip label above if hotspot is near bottom edge */
+.hotspot.bottom-area .hotspot-label {
+    top: auto;
+    bottom: 115%;
+}
+
+/* VIDEO PLAYER */
+.video-player-container {
+    width: 100%;
+    height: 100%;
+    background: #000;
+}
+
+.video-controls-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 4rem;
+    background: linear-gradient(transparent, rgba(0,0,0,0.8));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.tap-to-return {
+    margin-bottom: 2rem;
+    font-size: 1.2rem;
+    letter-spacing: 0.2rem;
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+}
+
+.video-progress-bar {
+    width: 100%;
+    height: 0.5vmax;
+    min-height: 4px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 1vmax;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--color-accent);
+    width: 0%;
+    transition: width 0.1s linear;
+}
+/* ANIMATIONS */
+@keyframes breathing {
+    0%, 100% { opacity: 0.4; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.05); }
+}
+
+@keyframes hotspot-pulse {
+    0% { transform: scale(1); opacity: 0.6; }
+    100% { transform: scale(3); opacity: 0; }
+}
+
+/* TIMER DISPLAY */
+.map-controls {
+    position: absolute;
+    top: 3vmax;
+    right: 3vmax;
+    z-index: 100;
+}
+
+.timer-display {
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(10px);
+    padding: 1rem 2rem;
+    border-radius: 5rem;
+    border: 1px solid rgba(255,255,255,0.1);
+    font-family: monospace;
+    font-size: 1.2rem;
+    color: var(--color-text-secondary);
+}
+
+#inactivity-timer {
+    color: var(--color-accent);
+    font-weight: bold;
+}
+
+/* TRANSITIONS */
+.transition-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    z-index: 99999;
+    opacity: 1; /* Hide everything initially */
+    pointer-events: none;
+    transition: opacity 1.5s var(--ease-standard);
+}
+
+.transition-overlay.active {
+    opacity: 1;
+}
+
+/* INTRO SCREEN */
+.intro-graphics {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle, #1a1a1a 0%, #000 100%);
+}
+
+.intro-logo {
+    z-index: 10;
+    text-align: center;
+}
+
+.reveal-text {
+    font-size: 3rem;
+    font-weight: 300;
+    letter-spacing: 1rem;
+    color: var(--color-accent);
+}
+
+/* SESSION ENDED MODAL */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.95);
+    backdrop-filter: blur(20px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.5s var(--ease-standard);
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-content {
+    text-align: center;
+}
+
+.modal-content h3 {
+    font-size: 3rem;
+    letter-spacing: 0.5rem;
+    margin-bottom: 1rem;
+    color: var(--color-accent);
+}
+
+.modal-content p {
+    font-size: 1.2rem;
+    color: var(--color-text-secondary);
+}
+
+/* TOUCH RIPPLE EFFECT */
+.touch-ripple {
+    position: fixed;
+    width: 2vmax;
+    height: 2vmax;
+    min-width: 20px;
+    min-height: 20px;
+    background: rgba(255, 255, 255, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    z-index: 100000;
+    animation: touch-shockwave 0.8s var(--ease-out) forwards;
+}
+
+@keyframes touch-shockwave {
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.8;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(15);
+        opacity: 0;
+    }
+}
+
+/* ICON TOUCH POLISH */
+.hotspot:active {
+    filter: brightness(2) contrast(1.2);
+    transform: scale(0.95);
+}
+
+.hotspot:active .hotspot-inner {
+    transform: scale(0.9) rotate(5deg);
+}

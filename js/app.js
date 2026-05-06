@@ -1,0 +1,86 @@
+/**
+ * Main Application Entry Point
+ * Orchestrates the initialization of all modules.
+ */
+
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('Premium Kiosk App Initializing...');
+    
+    // Initialize Modules
+    IntroAnimation.init();
+    InactivityTimer.init();
+    VideoEngine.init();
+    MapManager.init();
+    KioskState.init();
+
+    // Ensure Attract Video starts playing and hides the preloader
+    const attractVideo = document.getElementById('attract-video');
+    const overlay = document.getElementById('global-transition-overlay');
+    
+    if (attractVideo) {
+        // Pre-warm video
+        attractVideo.addEventListener('canplaythrough', () => {
+            console.log("Video ready, revealing app...");
+            attractVideo.play().catch(() => {});
+            setTimeout(() => {
+                if (overlay) overlay.style.opacity = '0';
+                document.body.classList.add('ready');
+            }, 500);
+        }, { once: true });
+        
+        // Fallback for fast connections/cached video
+        if (attractVideo.readyState >= 3) {
+            attractVideo.play().catch(() => {});
+            if (overlay) overlay.style.opacity = '0';
+            document.body.classList.add('ready');
+        }
+    } else {
+        // Fallback if no video
+        if (overlay) overlay.style.opacity = '0';
+        document.body.classList.add('ready');
+    }
+    
+    // Global Interaction Fail-safe for Kiosk
+    window.addEventListener('mousedown', (e) => {
+        createRipple(e.clientX, e.clientY);
+        if (typeof KioskState !== 'undefined' && KioskState.currentState === KioskState.IDLE) {
+            KioskState.transitionTo(KioskState.INTRO);
+        }
+    }, true);
+
+    window.addEventListener('touchstart', (e) => {
+        const touch = e.touches[0];
+        createRipple(touch.clientX, touch.clientY);
+        if (typeof KioskState !== 'undefined' && KioskState.currentState === KioskState.IDLE) {
+            KioskState.transitionTo(KioskState.INTRO);
+        }
+    }, true);
+
+    function createRipple(x, y) {
+        const ripple = document.createElement('div');
+        ripple.className = 'touch-ripple';
+        ripple.style.left = `${x}px`;
+        ripple.style.top = `${y}px`;
+        document.body.appendChild(ripple);
+        
+        ripple.addEventListener('animationend', () => {
+            ripple.remove();
+        });
+    }
+    
+    // Global Error Handling for Kiosk
+    window.onerror = function(msg, url, lineNo, columnNo, error) {
+        console.error('Kiosk Error:', msg, 'at', url, ':', lineNo);
+        return false;
+    };
+    
+    // Prevent context menu (long press)
+    window.oncontextmenu = function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        return false;
+    };
+
+    // Performance: Pre-warm animations
+    document.body.classList.add('ready');
+});
