@@ -321,6 +321,56 @@ body, html {
     width: 0%;
     transition: width 0.1s linear;
 }
+
+/* VIDEO NAVIGATION */
+.video-nav {
+    position: absolute;
+    top: 3vmax;
+    left: 3vmax;
+    right: 3vmax;
+    display: flex;
+    justify-content: space-between;
+    pointer-events: none;
+    z-index: 100;
+}
+
+.nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border-radius: 5rem;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.1rem;
+    cursor: pointer;
+    pointer-events: auto;
+    transition: all 0.3s var(--ease-standard);
+}
+
+.nav-btn svg {
+    width: 1.2rem;
+    height: 1.2rem;
+}
+
+.nav-btn:active {
+    transform: scale(0.95);
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+}
+
+.video-footer {
+    position: absolute;
+    bottom: 3vmax;
+    left: 10%;
+    right: 10%;
+    pointer-events: none;
+}
 /* ANIMATIONS */
 @keyframes breathing {
     0%, 100% { opacity: 0.4; transform: scale(1); }

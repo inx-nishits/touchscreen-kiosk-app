@@ -16,12 +16,36 @@ const VideoEngine = {
             this.player.addEventListener('timeupdate', () => this.updateProgress());
             this.player.addEventListener('ended', () => this.onVideoEnded());
             
-            // Return to map on tap
-            this.player.parentElement.addEventListener('touchstart', (e) => {
+            // Home Button
+            document.getElementById('btn-video-home').addEventListener('touchstart', (e) => {
+                e.stopPropagation();
+                KioskState.transitionTo(KioskState.IDLE);
+            });
+            document.getElementById('btn-video-home').addEventListener('mousedown', (e) => {
+                e.stopPropagation();
+                KioskState.transitionTo(KioskState.IDLE);
+            });
+
+            // Back to Map Button
+            document.getElementById('btn-video-back').addEventListener('touchstart', (e) => {
+                e.stopPropagation();
                 KioskState.transitionTo(KioskState.MAP);
             });
-            this.player.parentElement.addEventListener('mousedown', (e) => {
+            document.getElementById('btn-video-back').addEventListener('mousedown', (e) => {
+                e.stopPropagation();
                 KioskState.transitionTo(KioskState.MAP);
+            });
+            
+            // Return to map on tap anywhere else
+            this.player.parentElement.addEventListener('touchstart', (e) => {
+                if (e.target.tagName !== 'BUTTON' && !e.target.closest('button')) {
+                    KioskState.transitionTo(KioskState.MAP);
+                }
+            });
+            this.player.parentElement.addEventListener('mousedown', (e) => {
+                if (e.target.tagName !== 'BUTTON' && !e.target.closest('button')) {
+                    KioskState.transitionTo(KioskState.MAP);
+                }
             });
         }
     },
