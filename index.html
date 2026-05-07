@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Premium Kiosk Experience</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>4K Premium Kiosk - Bulgarian Heritage</title>
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/animations.css">
     <!-- Google Fonts for premium typography -->
@@ -12,6 +12,9 @@
 <body class="state-idle">
     <!-- Overlay for Transitions -->
     <div id="global-transition-overlay" class="transition-overlay"></div>
+    
+    <!-- Hidden Tool for FullScreen (Triple tap top right) -->
+    <div id="kiosk-tools" style="position:fixed; top:0; right:0; width:100px; height:100px; z-index:999999; cursor:none;"></div>
 
     <!-- IDLE MODE: Attract Video -->
     <section id="screen-idle" class="screen active">

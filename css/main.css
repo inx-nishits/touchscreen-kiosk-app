@@ -34,8 +34,8 @@ body, html {
     background: var(--color-bg);
     font-family: 'Outfit', 'Inter', sans-serif;
     color: var(--color-text-primary);
-    cursor: auto; /* Re-enabled for testing */
-    font-size: clamp(14px, 1.5vmax, 24px); /* Fluid base font size for 4K compatibility */
+    cursor: none; /* Hidden for Kiosk production */
+    font-size: clamp(16px, 1.25vw, 32px); /* Scale with width for 4K consistency */
 }
 
 /* Screens */
@@ -100,11 +100,12 @@ body, html {
 }
 
 .logo-text {
-    font-size: 5rem;
+    font-size: 6rem;
     font-weight: 600;
-    letter-spacing: 0.5rem;
-    margin-bottom: 2rem;
+    letter-spacing: 0.8rem;
+    margin-bottom: 2.5rem;
     text-transform: uppercase;
+    text-shadow: 0 0 30px rgba(0,0,0,0.5); /* Better legibility over 4K video */
 }
 
 .logo-text span {
@@ -155,10 +156,10 @@ body, html {
 
 .hotspot {
     position: absolute;
-    width: 7vmax;
-    height: 7vmax;
-    min-width: 80px;
-    min-height: 80px;
+    width: 6vw; /* Using vw for consistent sizing on 4K */
+    height: 6vw;
+    min-width: 100px;
+    min-height: 100px;
     background: rgba(255,255,255,0.05);
     border: 1px solid rgba(255,255,255,0.2);
     backdrop-filter: blur(10px);
@@ -258,7 +259,7 @@ body, html {
     left: 50%;
     transform: translateX(-50%);
     white-space: nowrap;
-    font-size: 0.85rem;
+    font-size: 1.1rem;
     font-weight: 700;
     letter-spacing: 0.15rem;
     text-transform: uppercase;
@@ -342,12 +343,12 @@ body, html {
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.2);
     color: white;
-    padding: 0.8rem 1.5rem;
+    padding: 1.2rem 2.2rem;
     border-radius: 5rem;
     font-family: inherit;
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     font-weight: 600;
-    letter-spacing: 0.1rem;
+    letter-spacing: 0.15rem;
     cursor: pointer;
     pointer-events: auto;
     transition: all 0.3s var(--ease-standard);
