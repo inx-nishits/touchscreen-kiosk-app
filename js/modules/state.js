@@ -41,21 +41,35 @@ const KioskState = {
         this.handleExit(this.currentState);
         
         const overlay = document.getElementById('global-transition-overlay');
-        if (overlay) overlay.classList.add('active');
         
-        // Faster transition for snappier feel
-        setTimeout(() => {
-            if (oldScreen) oldScreen.classList.remove('active');
-            newScreen.classList.add('active');
+        // Use direct cross-fade for Map to ensure seamless feel, use overlay for others
+        if (newState === this.MAP) {
+            console.log(`[Kiosk] Seamless cross-fade to: ${newState}`);
             
-            console.log(`[Kiosk] Switched to: ${newState}`);
+            newScreen.classList.add('active');
             this.currentState = newState;
             this.handleEntry(newState, data);
             
             setTimeout(() => {
-                if (overlay) overlay.classList.remove('active');
-            }, 300);
-        }, 300);
+                if (oldScreen) oldScreen.classList.remove('active');
+                this.handleExit(oldState);
+            }, 1000); // Match CSS transition duration
+        } else {
+            if (overlay) overlay.classList.add('active');
+            
+            setTimeout(() => {
+                if (oldScreen) oldScreen.classList.remove('active');
+                newScreen.classList.add('active');
+                
+                console.log(`[Kiosk] Switched to: ${newState}`);
+                this.currentState = newState;
+                this.handleEntry(newState, data);
+                
+                setTimeout(() => {
+                    if (overlay) overlay.classList.remove('active');
+                }, 100);
+            }, 400);
+        }
     },
     
     handleEntry(state, data) {
@@ -73,14 +87,10 @@ const KioskState = {
                 
             case this.INTRO:
                 IntroAnimation.start();
-                // Auto transition to MAP after intro animation
-                setTimeout(() => {
-                    this.transitionTo(this.MAP);
-                }, 3000);
                 break;
                 
             case this.MAP:
-                // Timer already started above
+                MapManager.revealIcons();
                 break;
                 
             case this.VIDEO:

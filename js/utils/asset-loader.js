@@ -6,18 +6,19 @@
 const AssetLoader = {
     assets: {
         images: [
-            'assets/images/map-base.png'
+            'assets/images/map-background.jpg',
+            'assets/images/chilandar-icon.png',
+            'assets/images/church-of-the-holy-sepulchre-icon.png',
+            'assets/images/hagia-sophia-in-lznik-icon.png',
+            'assets/images/hagios-demetrios-icon.png',
+            'assets/images/holy-forty-martyrs-icon.png',
+            'assets/images/mar-saba-icon.png',
+            'assets/images/trip-icon.png',
+            'assets/images/trip-mytobahe.png'
         ],
         videos: [
-            'assets/videos/attract.mp4',
-            'assets/videos/poi-1.mp4',
-            'assets/videos/poi-2.mp4',
-            'assets/videos/poi-3.mp4',
-            'assets/videos/poi-4.mp4',
-            'assets/videos/poi-5.mp4',
-            'assets/videos/poi-6.mp4',
-            'assets/videos/poi-7.mp4',
-            'assets/videos/poi-8.mp4'
+            'assets/videos/beginning-video.mp4',
+            'assets/videos/idle-screen.mp4'
         ]
     },
     

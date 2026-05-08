@@ -4,8 +4,8 @@
  */
 
 const InactivityTimer = {
-    timeoutDuration: 120, // seconds
-    timeLeft: 120,
+    timeoutDuration: 140, // seconds
+    timeLeft: 140,
     interval: null,
     displayElement: null,
     

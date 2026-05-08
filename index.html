@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>4K Premium Kiosk - Bulgarian Heritage</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="assets/images/trip-mytobahe.png">
+    
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/animations.css">
     <!-- Google Fonts for premium typography -->
@@ -11,7 +14,7 @@
 </head>
 <body class="state-idle">
     <!-- Overlay for Transitions -->
-    <div id="global-transition-overlay" class="transition-overlay"></div>
+    <div id="global-transition-overlay" class="transition-overlay active"></div>
     
     <!-- Hidden Tool for FullScreen (Triple tap top right) -->
     <div id="kiosk-tools" style="position:fixed; top:0; right:0; width:100px; height:100px; z-index:999999; cursor:none;"></div>
@@ -20,30 +23,20 @@
     <section id="screen-idle" class="screen active">
         <div class="video-container">
             <video id="attract-video" autoplay loop muted playsinline class="fill-screen">
-                <source src="assets/videos/attract.mp4" type="video/mp4">
+                <source src="assets/videos/idle-screen.mp4" type="video/mp4">
             </video>
-            <div class="video-overlay dark-gradient"></div>
         </div>
 
-        <div class="idle-content">
-            <h1 class="logo-text">BULGARIAN <span>HERITAGE</span></h1>
-            <div class="touch-callout">
-                <div class="touch-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/>
-                        <path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/>
-                        <path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/>
-                        <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/>
-                    </svg>
-                </div>
-                <div class="pulse-text">Touch to Explore</div>
-            </div>
-        </div>
     </section>
 
     <!-- INTRO ANIMATION SCREEN -->
     <section id="screen-intro" class="screen">
-        <div class="intro-graphics">
+        <div class="video-container">
+            <video id="intro-video" playsinline class="fill-screen">
+                <source src="assets/videos/beginning-video.mp4" type="video/mp4">
+            </video>
+        </div>
+        <div class="intro-graphics" style="pointer-events: none;">
             <canvas class="particle-canvas" id="intro-particles"></canvas>
             <div class="intro-logo">
                 <h2 class="reveal-text">BULGARIAN HERITAGE</h2>
@@ -54,41 +47,33 @@
     <!-- INTERACTIVE MAP SCREEN -->
     <section id="screen-map" class="screen">
         <div class="map-container" id="interactive-map">
-            <img src="assets/images/map-base.png" alt="Venue Map" class="map-base">
+            <img src="assets/images/map-background.jpg" alt="Interactive Map" class="map-base">
             
             <!-- POI Hotspots -->
             <div class="hotspots-layer">
-                <button class="hotspot odd icon-hall" data-poi="1" style="top: 25%; left: 45%;">
-                    <div class="hotspot-inner"></div>
-                    <span class="hotspot-label">Sofia Cathedral</span>
+                <button class="hotspot" data-poi="chilandar" style="top: 25%; left: 35%;">
+                    <img src="assets/images/chilandar-icon.png" alt="Chilandar">
                 </button>
-                <button class="hotspot even icon-tech bottom-area" data-poi="2" style="top: 82%; left: 82%;">
-                    <div class="hotspot-inner"></div>
-                    <span class="hotspot-label">Rila Monastery</span>
+                <button class="hotspot" data-poi="church-holy-sepulchre" style="top: 55%; left: 85%;">
+                    <img src="assets/images/church-of-the-holy-sepulchre-icon.png" alt="Holy Sepulchre">
                 </button>
-                <button class="hotspot odd icon-lounge" data-poi="3" style="top: 12%; left: 78%;">
-                    <div class="hotspot-inner"></div>
-                    <span class="hotspot-label">Ancient Gold</span>
+                <button class="hotspot" data-poi="hagia-sophia" style="top: 20%; left: 75%;">
+                    <img src="assets/images/hagia-sophia-in-lznik-icon.png" alt="Hagia Sophia">
                 </button>
-                <button class="hotspot even icon-vip" data-poi="4" style="top: 45%; left: 12%;">
-                    <div class="hotspot-inner"></div>
-                    <span class="hotspot-label">Plovdiv Theater</span>
+                <button class="hotspot" data-poi="hagios-demetrios" style="top: 40%; left: 50%;">
+                    <img src="assets/images/hagios-demetrios-icon.png" alt="Hagios Demetrios">
                 </button>
-                <button class="hotspot odd icon-atelier bottom-area" data-poi="5" style="top: 75%; left: 55%;">
-                    <div class="hotspot-inner"></div>
-                    <span class="hotspot-label">Rose Valley</span>
+                <button class="hotspot" data-poi="holy-forty-martyrs" style="top: 15%; left: 55%;">
+                    <img src="assets/images/holy-forty-martyrs-icon.png" alt="Forty Martyrs">
                 </button>
-                <button class="hotspot even icon-media" data-poi="6" style="top: 45%; left: 86%;">
-                    <div class="hotspot-inner"></div>
-                    <span class="hotspot-label">Veliko Tarnovo</span>
+                <button class="hotspot" data-poi="mar-saba" style="top: 75%; left: 82%;">
+                    <img src="assets/images/mar-saba-icon.png" alt="Mar Saba">
                 </button>
-                <button class="hotspot odd icon-cafe bottom-area" data-poi="7" style="top: 82%; left: 18%;">
-                    <div class="hotspot-inner"></div>
-                    <span class="hotspot-label">Nessebar Coast</span>
+                <button class="hotspot trip-icon" data-poi="trip" style="top: 65%; left: 15%;">
+                    <img src="assets/images/trip-icon.png" alt="Trip">
                 </button>
-                <button class="hotspot even icon-nexus" data-poi="8" style="top: 12%; left: 18%;">
-                    <div class="hotspot-inner"></div>
-                    <span class="hotspot-label">Seven Lakes</span>
+                <button class="hotspot trip-icon" data-poi="mytobahe" style="top: 75%; left: 35%;">
+                    <img src="assets/images/trip-mytobahe.png" alt="Mytobahe">
                 </button>
             </div>
         </div>
@@ -113,11 +98,6 @@
                 </button>
             </div>
 
-            <div class="video-footer">
-                <div class="video-progress-bar">
-                    <div id="video-progress" class="progress-fill"></div>
-                </div>
-            </div>
         </div>
     </section>
 

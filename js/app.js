@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log("Video ready, revealing app...");
             attractVideo.play().catch(() => {});
             setTimeout(() => {
-                if (overlay) overlay.style.opacity = '0';
+                if (overlay) overlay.classList.remove('active');
                 document.body.classList.add('ready');
             }, 500);
         }, { once: true });
@@ -31,12 +31,12 @@ document.addEventListener('DOMContentLoaded', () => {
         // Fallback for fast connections/cached video
         if (attractVideo.readyState >= 3) {
             attractVideo.play().catch(() => {});
-            if (overlay) overlay.style.opacity = '0';
+            if (overlay) overlay.classList.remove('active');
             document.body.classList.add('ready');
         }
     } else {
         // Fallback if no video
-        if (overlay) overlay.style.opacity = '0';
+        if (overlay) overlay.classList.remove('active');
         document.body.classList.add('ready');
     }
     

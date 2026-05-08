@@ -25,17 +25,53 @@ const IntroAnimation = {
     
     start() {
         console.log('Intro Animation Started');
+        
+        const video = document.getElementById('intro-video');
+        if (video) {
+            video.currentTime = 0;
+            const playPromise = video.play();
+            
+            if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                    console.warn("Intro video playback failed, skipping to map...", error);
+                    KioskState.transitionTo(KioskState.MAP);
+                });
+            }
+            
+            // Transition to map when video ends
+            video.onended = () => {
+                KioskState.transitionTo(KioskState.MAP);
+            };
+
+            // Emergency fallback for very long videos or playback issues
+            // If nothing happens for 60 seconds, go to map anyway
+            this.fallbackTimer = setTimeout(() => {
+                if (KioskState.currentState === KioskState.INTRO) {
+                    console.warn("Intro video timed out, forcing transition to map.");
+                    KioskState.transitionTo(KioskState.MAP);
+                }
+            }, 60000); 
+        } else {
+            // No video? Go straight to map
+            KioskState.transitionTo(KioskState.MAP);
+        }
+
         this.particles = [];
         for (let i = 0; i < 150; i++) {
             this.particles.push(this.createParticle());
         }
         this.animate();
-        
-        // Stop animation after 3 seconds to save resources
-        setTimeout(() => this.stop(), 3000);
     },
     
     stop() {
+        if (this.fallbackTimer) clearTimeout(this.fallbackTimer);
+        
+        const video = document.getElementById('intro-video');
+        if (video) {
+            video.pause();
+            video.onended = null;
+        }
+
         if (this.animationId) {
             cancelAnimationFrame(this.animationId);
             this.animationId = null;

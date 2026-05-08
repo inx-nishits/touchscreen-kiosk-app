@@ -154,22 +154,34 @@ body, html {
     opacity: 0.8; /* Subtle dim to make hotspots pop */
 }
 
+.hotspots-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 40;
+}
+
 .hotspot {
     position: absolute;
-    width: 6vw; /* Using vw for consistent sizing on 4K */
-    height: 6vw;
-    min-width: 100px;
-    min-height: 100px;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.2);
-    backdrop-filter: blur(10px);
+    width: 7vw; /* Slightly larger for better touch target */
+    height: 7vw;
+    min-width: 120px;
+    min-height: 120px;
+    background: rgba(255,255,255,0.08);
+    border: 2px solid rgba(255,255,255,0.15);
+    backdrop-filter: blur(15px);
     border-radius: 50%;
     cursor: pointer;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    transform: translate(-50%, -50%);
     transition: all 0.4s var(--ease-impact);
     z-index: 50;
+    padding: 1vw;
     
     /* Continuous "Beacon" Animations */
     animation: 
@@ -180,67 +192,66 @@ body, html {
 /* Organic Offsets for each icon */
 .hotspot:nth-child(2n) { animation-delay: -1.5s; }
 .hotspot:nth-child(3n) { animation-delay: -2.2s; }
+.hotspot:nth-child(4n) { animation-delay: -0.8s; }
 .hotspot:nth-child(5n) { animation-delay: -3.8s; }
 
 @keyframes beacon-breathing {
     0%, 100% { 
         transform: scale(1); 
         box-shadow: 0 0 20px rgba(255,255,255,0.1);
+        background: rgba(255,255,255,0.08);
     }
     50% { 
-        transform: scale(1.08); 
-        box-shadow: 0 0 50px var(--color-accent-glow);
-        border-color: rgba(255,255,255,0.5);
+        transform: scale(1.05); 
+        box-shadow: 0 0 60px var(--color-accent-glow);
+        border-color: var(--color-accent);
+        background: rgba(212, 175, 55, 0.1);
     }
 }
 
 @keyframes beacon-floating {
     0%, 100% { translate: 0 0; }
-    50% { translate: 0 -1vmax; }
+    50% { translate: 0 -0.5vmax; }
 }
 
-.hotspot-inner {
-    width: 80%;
-    height: 80%;
-    background-size: 200% 200%;
-    background-repeat: no-repeat;
-    border-radius: 50%;
+.hotspot img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
     transition: transform 0.4s var(--ease-impact);
-}
-
-/* ODD Styles (Heritage Icon 1) */
-.hotspot.odd {
-    box-shadow: 0 0 30px rgba(212, 175, 55, 0.2);
-    border-color: rgba(212, 175, 55, 0.4);
-}
-
-.hotspot.odd .hotspot-inner {
-    background-image: url('../assets/images/unnamed.png');
-    background-size: contain;
-    background-position: center;
-    background-repeat: no-repeat;
-}
-
-/* EVEN Styles (Hagia-Sophia) */
-.hotspot.even {
-    box-shadow: 0 0 30px rgba(100, 200, 255, 0.2);
-    border-color: rgba(100, 200, 255, 0.4);
-}
-
-.hotspot.even .hotspot-inner {
-    background-image: url('../assets/images/Hagia-Sophia.png');
-    background-size: contain;
-    background-position: center;
-    background-repeat: no-repeat;
+    filter: drop-shadow(0 0 10px rgba(0,0,0,0.5));
 }
 
 .hotspot:active {
-    transform: scale(1.1);
-    background: rgba(255,255,255,0.2);
+    transform: scale(0.92);
+    background: rgba(212, 175, 55, 0.2);
+    border-color: var(--color-accent);
 }
 
-.hotspot:active .hotspot-inner {
-    transform: scale(1.2);
+@keyframes icon-pulsating {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); }
+    50% { transform: translate(-50%, -50%) scale(1.08); }
+}
+
+.hotspot.trip-icon {
+    width: 10vw;
+    height: 10vw;
+    min-width: 160px;
+    min-height: 160px;
+    background: rgba(212, 175, 55, 0.25);
+    border: 3px solid var(--color-accent);
+    padding: 1.5vw;
+    animation: icon-pulsating 3s infinite ease-in-out !important;
+    box-shadow: 0 0 30px rgba(212, 175, 55, 0.3) !important;
+}
+
+.hotspot.trip-icon img {
+    filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.5));
+}
+
+.hotspot.trip-icon:active {
+    background: rgba(212, 175, 55, 0.4);
+    transform: translate(-50%, -50%) scale(0.95) !important;
 }
 
 .hotspot-pulse {
@@ -416,13 +427,14 @@ body, html {
     height: 100%;
     background: #000;
     z-index: 99999;
-    opacity: 1; /* Hide everything initially */
+    opacity: 0; 
     pointer-events: none;
-    transition: opacity 1.5s var(--ease-standard);
+    transition: opacity 0.6s var(--ease-standard);
 }
 
 .transition-overlay.active {
     opacity: 1;
+    pointer-events: all;
 }
 
 /* INTRO SCREEN */

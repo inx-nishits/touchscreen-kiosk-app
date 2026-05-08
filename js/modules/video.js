@@ -5,16 +5,22 @@
 
 const VideoEngine = {
     player: null,
-    progressBar: null,
     activePOI: null,
     
     init() {
         this.player = document.getElementById('poi-video-player');
-        this.progressBar = document.getElementById('video-progress');
         
         if (this.player) {
-            this.player.addEventListener('timeupdate', () => this.updateProgress());
             this.player.addEventListener('ended', () => this.onVideoEnded());
+            
+            // Error Fallback: If POI video is missing, play intro video as placeholder
+            this.player.addEventListener('error', () => {
+                if (this.player.src && !this.player.src.includes('beginning-video.mp4')) {
+                    console.warn(`[Kiosk] Video not found: ${this.player.src}. Playing fallback placeholder.`);
+                    this.player.src = 'assets/videos/beginning-video.mp4';
+                    this.player.play().catch(e => console.error("Fallback playback failed", e));
+                }
+            });
             
             // Home Button
             document.getElementById('btn-video-home').addEventListener('touchstart', (e) => {
@@ -36,17 +42,16 @@ const VideoEngine = {
                 KioskState.transitionTo(KioskState.MAP);
             });
             
-            // Return to map on tap anywhere else
-            this.player.parentElement.addEventListener('touchstart', (e) => {
+            // Return to map on tap anywhere else (Touch & Click)
+            const handleClose = (e) => {
+                // Ignore if clicking on navigation buttons
                 if (e.target.tagName !== 'BUTTON' && !e.target.closest('button')) {
                     KioskState.transitionTo(KioskState.MAP);
                 }
-            });
-            this.player.parentElement.addEventListener('mousedown', (e) => {
-                if (e.target.tagName !== 'BUTTON' && !e.target.closest('button')) {
-                    KioskState.transitionTo(KioskState.MAP);
-                }
-            });
+            };
+            
+            this.player.parentElement.addEventListener('touchstart', handleClose);
+            this.player.parentElement.addEventListener('mousedown', handleClose);
         }
     },
     
@@ -80,31 +85,15 @@ const VideoEngine = {
         }
     },
     
-    updateProgress() {
-        if (this.player && this.progressBar) {
-            const progress = (this.player.currentTime / this.player.duration) * 100;
-            this.progressBar.style.width = `${progress}%`;
-        }
-    },
-    
     onVideoEnded() {
         KioskState.transitionTo(KioskState.MAP);
     },
     
     mockPlayback() {
         console.log("Mocking video playback for dev...");
-        let progress = 0;
-        const interval = setInterval(() => {
-            progress += 2;
-            if (this.progressBar) this.progressBar.style.width = `${progress}%`;
-            if (progress >= 100) {
-                clearInterval(interval);
-                this.onVideoEnded();
-            }
-            if (KioskState.currentState !== KioskState.VIDEO) {
-                clearInterval(interval);
-            }
-        }, 100);
+        setTimeout(() => {
+            this.onVideoEnded();
+        }, 5000);
     }
 };
 
