@@ -459,6 +459,26 @@ body, html {
     color: var(--color-accent);
 }
 
+.skip-hint {
+    position: absolute;
+    bottom: 5vh;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.2rem;
+    font-weight: 300;
+    letter-spacing: 0.3rem;
+    color: var(--color-accent);
+    text-transform: uppercase;
+    opacity: 0;
+    transition: opacity 1s ease;
+    text-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+    z-index: 100;
+}
+
+.skip-hint.visible {
+    opacity: 0.6;
+}
+
 /* SESSION ENDED MODAL */
 .modal-overlay {
     position: fixed;

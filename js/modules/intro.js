@@ -27,6 +27,9 @@ const IntroAnimation = {
         console.log('Intro Animation Started');
         
         const video = document.getElementById('intro-video');
+        const skipHint = document.getElementById('intro-skip-hint');
+        const container = document.querySelector('#screen-intro .video-container');
+
         if (video) {
             video.currentTime = 0;
             const playPromise = video.play();
@@ -43,16 +46,29 @@ const IntroAnimation = {
                 KioskState.transitionTo(KioskState.MAP);
             };
 
-            // Emergency fallback for very long videos or playback issues
-            // If nothing happens for 60 seconds, go to map anyway
+            // Emergency fallback
             this.fallbackTimer = setTimeout(() => {
                 if (KioskState.currentState === KioskState.INTRO) {
-                    console.warn("Intro video timed out, forcing transition to map.");
                     KioskState.transitionTo(KioskState.MAP);
                 }
             }, 60000); 
+
+            // Tap to Skip Logic
+            const handleSkip = (e) => {
+                console.log("[Kiosk] Intro skipped by user");
+                KioskState.transitionTo(KioskState.MAP);
+            };
+
+            if (container) {
+                container.addEventListener('mousedown', handleSkip, { once: true });
+                container.addEventListener('touchstart', handleSkip, { once: true });
+            }
+
+            // Show skip hint after 3 seconds
+            this.hintTimer = setTimeout(() => {
+                if (skipHint) skipHint.classList.add('visible');
+            }, 3000);
         } else {
-            // No video? Go straight to map
             KioskState.transitionTo(KioskState.MAP);
         }
 
@@ -65,8 +81,19 @@ const IntroAnimation = {
     
     stop() {
         if (this.fallbackTimer) clearTimeout(this.fallbackTimer);
+        if (this.hintTimer) clearTimeout(this.hintTimer);
         
         const video = document.getElementById('intro-video');
+        const skipHint = document.getElementById('intro-skip-hint');
+        const container = document.querySelector('#screen-intro .video-container');
+
+        if (skipHint) skipHint.classList.remove('visible');
+        
+        if (container) {
+            // Logic to remove listeners would go here, but using {once: true} 
+            // and transitioning to MAP (which hides this screen) handles it.
+        }
+
         if (video) {
             video.pause();
             video.onended = null;
