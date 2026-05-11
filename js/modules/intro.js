@@ -63,11 +63,6 @@ const IntroAnimation = {
                 container.addEventListener('mousedown', handleSkip, { once: true });
                 container.addEventListener('touchstart', handleSkip, { once: true });
             }
-
-            // Show skip hint after 3 seconds
-            this.hintTimer = setTimeout(() => {
-                if (skipHint) skipHint.classList.add('visible');
-            }, 3000);
         } else {
             KioskState.transitionTo(KioskState.MAP);
         }

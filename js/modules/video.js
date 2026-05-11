@@ -23,24 +23,30 @@ const VideoEngine = {
             });
             
             // Home Button
-            document.getElementById('btn-video-home').addEventListener('touchstart', (e) => {
-                e.stopPropagation();
-                KioskState.transitionTo(KioskState.IDLE);
-            });
-            document.getElementById('btn-video-home').addEventListener('mousedown', (e) => {
-                e.stopPropagation();
-                KioskState.transitionTo(KioskState.IDLE);
-            });
+            const btnHome = document.getElementById('btn-video-home');
+            if (btnHome) {
+                btnHome.addEventListener('touchstart', (e) => {
+                    e.stopPropagation();
+                    KioskState.transitionTo(KioskState.IDLE);
+                });
+                btnHome.addEventListener('mousedown', (e) => {
+                    e.stopPropagation();
+                    KioskState.transitionTo(KioskState.IDLE);
+                });
+            }
 
             // Back to Map Button
-            document.getElementById('btn-video-back').addEventListener('touchstart', (e) => {
-                e.stopPropagation();
-                KioskState.transitionTo(KioskState.MAP);
-            });
-            document.getElementById('btn-video-back').addEventListener('mousedown', (e) => {
-                e.stopPropagation();
-                KioskState.transitionTo(KioskState.MAP);
-            });
+            const btnBack = document.getElementById('btn-video-back');
+            if (btnBack) {
+                btnBack.addEventListener('touchstart', (e) => {
+                    e.stopPropagation();
+                    KioskState.transitionTo(KioskState.MAP);
+                });
+                btnBack.addEventListener('mousedown', (e) => {
+                    e.stopPropagation();
+                    KioskState.transitionTo(KioskState.MAP);
+                });
+            }
             
             // Return to map on tap anywhere else (Touch & Click)
             const handleClose = (e) => {
@@ -56,26 +62,40 @@ const VideoEngine = {
     },
     
     playPOI(poiId) {
-        console.log(`[Kiosk] Playing POI: ${poiId}`);
-        this.activePOI = poiId;
-        
-        const videoSrc = `assets/videos/poi-${poiId}.mp4`;
-        
-        // Fast Playback Strategy: Reset and Load
-        this.player.pause();
-        this.player.currentTime = 0;
-        this.player.src = videoSrc;
-        
-        // Use a promise to ensure play starts as soon as data is ready
-        const playPromise = this.player.play();
-        if (playPromise !== undefined) {
-            playPromise.then(_ => {
-                console.log("[Kiosk] Video playing instantly.");
-            }).catch(error => {
-                console.warn("[Kiosk] Auto-play retry...", error);
-                this.player.play();
-            });
-        }
+        return new Promise((resolve) => {
+            console.log(`[Kiosk] Playing POI: ${poiId}`);
+            this.activePOI = poiId;
+            
+            // Map POI IDs to specific filenames
+            const videoMap = {
+                'mytobahe': 'assets/videos/mytobahe.mp4',
+                'holy-forty-martyrs': 'assets/videos/putovanje-svetog-save-ekran.mp4'
+            };
+
+            const videoSrc = videoMap[poiId] || `assets/videos/poi-${poiId}.mp4`;
+            
+            // Set up one-time playing listener
+            const onPlaying = () => {
+                this.player.removeEventListener('playing', onPlaying);
+                resolve();
+            };
+            this.player.addEventListener('playing', onPlaying);
+            
+            this.player.pause();
+            this.player.src = videoSrc;
+            this.player.load(); // Force immediate load
+            
+            const playPromise = this.player.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                    console.warn("[Kiosk] Auto-play retry...", error);
+                    this.player.play();
+                });
+            }
+
+            // Fallback for missing videos: resolve after a short delay so transition isn't blocked
+            setTimeout(resolve, 2000); 
+        });
     },
     
     stop() {

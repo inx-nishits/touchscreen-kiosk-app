@@ -165,13 +165,13 @@ body, html {
 
 .hotspot {
     position: absolute;
-    width: 7vw; /* Slightly larger for better touch target */
-    height: 7vw;
-    min-width: 120px;
-    min-height: 120px;
-    background: rgba(255,255,255,0.08);
-    border: 2px solid rgba(255,255,255,0.15);
-    backdrop-filter: blur(15px);
+    width: 5.5vw; /* Optimized size to prevent overlap */
+    height: 5.5vw;
+    min-width: 100px;
+    min-height: 100px;
+    background: transparent;
+    border: none;
+    backdrop-filter: none;
     border-radius: 50%;
     cursor: pointer;
     display: flex;
@@ -198,14 +198,9 @@ body, html {
 @keyframes beacon-breathing {
     0%, 100% { 
         transform: scale(1); 
-        box-shadow: 0 0 20px rgba(255,255,255,0.1);
-        background: rgba(255,255,255,0.08);
     }
     50% { 
         transform: scale(1.05); 
-        box-shadow: 0 0 60px var(--color-accent-glow);
-        border-color: var(--color-accent);
-        background: rgba(212, 175, 55, 0.1);
     }
 }
 
@@ -234,15 +229,15 @@ body, html {
 }
 
 .hotspot.trip-icon {
-    width: 10vw;
-    height: 10vw;
-    min-width: 160px;
-    min-height: 160px;
-    background: rgba(212, 175, 55, 0.25);
-    border: 3px solid var(--color-accent);
+    width: 8.5vw;
+    height: 8.5vw;
+    min-width: 140px;
+    min-height: 140px;
+    background: transparent;
+    border: none;
     padding: 1.5vw;
     animation: icon-pulsating 3s infinite ease-in-out !important;
-    box-shadow: 0 0 30px rgba(212, 175, 55, 0.3) !important;
+    box-shadow: none !important;
 }
 
 .hotspot.trip-icon img {
@@ -418,24 +413,7 @@ body, html {
     font-weight: bold;
 }
 
-/* TRANSITIONS */
-.transition-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: #000;
-    z-index: 99999;
-    opacity: 0; 
-    pointer-events: none;
-    transition: opacity 0.6s var(--ease-standard);
-}
-
-.transition-overlay.active {
-    opacity: 1;
-    pointer-events: all;
-}
+/* TRANSITIONS - Now using direct screen cross-fades */
 
 /* INTRO SCREEN */
 .intro-graphics {
@@ -459,25 +437,7 @@ body, html {
     color: var(--color-accent);
 }
 
-.skip-hint {
-    position: absolute;
-    bottom: 5vh;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 1.2rem;
-    font-weight: 300;
-    letter-spacing: 0.3rem;
-    color: var(--color-accent);
-    text-transform: uppercase;
-    opacity: 0;
-    transition: opacity 1s ease;
-    text-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
-    z-index: 100;
-}
-
-.skip-hint.visible {
-    opacity: 0.6;
-}
+/* Hint logic removed as per request */
 
 /* SESSION ENDED MODAL */
 .modal-overlay {

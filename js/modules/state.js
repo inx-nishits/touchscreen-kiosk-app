@@ -27,7 +27,7 @@ const KioskState = {
         idleScreen.addEventListener('mousedown', handleStart);
     },
     
-    transitionTo(newState, data = {}) {
+    async transitionTo(newState, data = {}) {
         console.log(`[Kiosk] Transitioning to: ${newState}`);
         
         const oldScreen = document.querySelector('.screen.active');
@@ -40,36 +40,30 @@ const KioskState = {
         
         this.handleExit(this.currentState);
         
-        const overlay = document.getElementById('global-transition-overlay');
-        
-        // Use direct cross-fade for Map to ensure seamless feel, use overlay for others
-        if (newState === this.MAP) {
-            console.log(`[Kiosk] Seamless cross-fade to: ${newState}`);
-            
-            newScreen.classList.add('active');
-            this.currentState = newState;
-            this.handleEntry(newState, data);
-            
-            setTimeout(() => {
-                if (oldScreen) oldScreen.classList.remove('active');
-                this.handleExit(oldState);
-            }, 1000); // Match CSS transition duration
-        } else {
-            if (overlay) overlay.classList.add('active');
-            
-            setTimeout(() => {
-                if (oldScreen) oldScreen.classList.remove('active');
-                newScreen.classList.add('active');
-                
-                console.log(`[Kiosk] Switched to: ${newState}`);
-                this.currentState = newState;
-                this.handleEntry(newState, data);
-                
-                setTimeout(() => {
-                    if (overlay) overlay.classList.remove('active');
-                }, 100);
-            }, 400);
+        // If we're going to video, pre-start the player to avoid black flash
+        if (newState === this.VIDEO && data.poiId) {
+            await VideoEngine.playPOI(data.poiId);
         }
+
+        // Pure Seamless Cross-fade: Add active to new, remove from old after transition
+        newScreen.classList.add('active');
+        const oldState = this.currentState;
+        this.currentState = newState;
+        
+        // Handle entry logic (excluding video play which we handled above)
+        if (newState !== this.VIDEO) {
+            this.handleEntry(newState, data);
+        } else {
+            // Video is already playing, just start inactivity timer
+            InactivityTimer.start();
+            window.dispatchEvent(new CustomEvent('kiosk-interaction'));
+        }
+        
+        setTimeout(() => {
+            if (oldScreen && oldScreen !== newScreen) {
+                oldScreen.classList.remove('active');
+            }
+        }, 1000); // Wait for the 1s CSS transition defined in main.css to complete
     },
     
     handleEntry(state, data) {

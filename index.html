@@ -1,23 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>4K Premium Kiosk - Bulgarian Heritage</title>
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="assets/images/trip-mytobahe.png">
-    
+
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/animations.css">
     <!-- Google Fonts for premium typography -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Inter:wght@300;400;700&display=swap"
+        rel="stylesheet">
 </head>
+
 <body class="state-idle">
-    <!-- Overlay for Transitions -->
-    <div id="global-transition-overlay" class="transition-overlay active"></div>
-    
+    <!-- Screen Transitions are now handled via CSS cross-fades -->
+
     <!-- Hidden Tool for FullScreen (Triple tap top right) -->
-    <div id="kiosk-tools" style="position:fixed; top:0; right:0; width:100px; height:100px; z-index:999999; cursor:none;"></div>
+    <div id="kiosk-tools"
+        style="position:fixed; top:0; right:0; width:100px; height:100px; z-index:999999; cursor:none;"></div>
 
     <!-- IDLE MODE: Attract Video -->
     <section id="screen-idle" class="screen active">
@@ -41,7 +46,7 @@
             <div class="intro-logo">
                 <h2 class="reveal-text">BULGARIAN HERITAGE</h2>
             </div>
-            <div id="intro-skip-hint" class="skip-hint">Tap to explore the map</div>
+            <!-- Hint Removed as per request -->
         </div>
     </section>
 
@@ -49,31 +54,31 @@
     <section id="screen-map" class="screen">
         <div class="map-container" id="interactive-map">
             <img src="assets/images/map-background.jpg" alt="Interactive Map" class="map-base">
-            
+
             <!-- POI Hotspots -->
             <div class="hotspots-layer">
-                <button class="hotspot" data-poi="chilandar" style="top: 25%; left: 35%;">
-                    <img src="assets/images/chilandar-icon.png" alt="Chilandar">
-                </button>
-                <button class="hotspot" data-poi="church-holy-sepulchre" style="top: 55%; left: 85%;">
-                    <img src="assets/images/church-of-the-holy-sepulchre-icon.png" alt="Holy Sepulchre">
-                </button>
-                <button class="hotspot" data-poi="hagia-sophia" style="top: 20%; left: 75%;">
-                    <img src="assets/images/hagia-sophia-in-lznik-icon.png" alt="Hagia Sophia">
-                </button>
-                <button class="hotspot" data-poi="hagios-demetrios" style="top: 40%; left: 50%;">
-                    <img src="assets/images/hagios-demetrios-icon.png" alt="Hagios Demetrios">
-                </button>
-                <button class="hotspot" data-poi="holy-forty-martyrs" style="top: 15%; left: 55%;">
+                <button class="hotspot" data-poi="holy-forty-martyrs" style="top: 10%; left: 48%;">
                     <img src="assets/images/holy-forty-martyrs-icon.png" alt="Forty Martyrs">
                 </button>
-                <button class="hotspot" data-poi="mar-saba" style="top: 75%; left: 82%;">
+                <button class="hotspot" data-poi="chilandar" style="top: 30%; left: 50%;">
+                    <img src="assets/images/chilandar-icon.png" alt="Chilandar">
+                </button>
+                <button class="hotspot" data-poi="hagia-sophia" style="top: 30%; left: 64%;">
+                    <img src="assets/images/hagia-sophia-in-lznik-icon.png" alt="Hagia Sophia">
+                </button>
+                <button class="hotspot" data-poi="hagios-demetrios" style="top: 22%; left: 42%;">
+                    <img src="assets/images/hagios-demetrios-icon.png" alt="Hagios Demetrios">
+                </button>
+                <button class="hotspot" data-poi="church-holy-sepulchre" style="top: 80%; left: 75%;">
+                    <img src="assets/images/church-of-the-holy-sepulchre-icon.png" alt="Holy Sepulchre">
+                </button>
+                <button class="hotspot" data-poi="mar-saba" style="top: 83%; left: 83%;">
                     <img src="assets/images/mar-saba-icon.png" alt="Mar Saba">
                 </button>
-                <button class="hotspot trip-icon" data-poi="trip" style="top: 65%; left: 15%;">
+                <button class="hotspot trip-icon" data-poi="trip" style="top: 86%; left: 20%;">
                     <img src="assets/images/trip-icon.png" alt="Trip">
                 </button>
-                <button class="hotspot trip-icon" data-poi="mytobahe" style="top: 75%; left: 35%;">
+                <button class="hotspot trip-icon" data-poi="mytobahe" style="top: 86%; left: 8%;">
                     <img src="assets/images/trip-mytobahe.png" alt="Mytobahe">
                 </button>
             </div>
@@ -86,18 +91,9 @@
             <video id="poi-video-player" playsinline class="fill-screen">
                 <source src="" type="video/mp4">
             </video>
-            
+
             <!-- Video Controls -->
-            <div class="video-nav">
-                <button id="btn-video-home" class="nav-btn">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-                    <span>HOME</span>
-                </button>
-                <button id="btn-video-back" class="nav-btn">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
-                    <span>MAP</span>
-                </button>
-            </div>
+            <!-- Video Navigation Removed as per request -->
 
         </div>
     </section>
@@ -121,4 +117,5 @@
     <script src="js/modules/map.js"></script>
     <script src="js/app.js"></script>
 </body>
+
 </html>
