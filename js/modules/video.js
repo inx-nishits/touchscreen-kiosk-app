@@ -68,6 +68,7 @@ const VideoEngine = {
             
             // Map POI IDs to specific filenames
             const videoMap = {
+                'trip': 'assets/videos/trip.mp4',
                 'mytobahe': 'assets/videos/mytobahe.mp4',
                 'holy-forty-martyrs': 'assets/videos/putovanje-svetog-save-ekran.mp4'
             };
