@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('Premium Kiosk App Initializing...');
     
     // Initialize Modules
+    AssetLoader.preloadAll();
     IntroAnimation.init();
     InactivityTimer.init();
     VideoEngine.init();
@@ -41,16 +42,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     // Global Interaction Fail-safe for Kiosk
-    window.addEventListener('mousedown', (e) => {
-        createRipple(e.clientX, e.clientY);
-        if (typeof KioskState !== 'undefined' && KioskState.currentState === KioskState.IDLE) {
-            KioskState.transitionTo(KioskState.INTRO);
+    window.addEventListener('pointerdown', (e) => {
+        // Only trigger ripple for primary contact to avoid multi-touch chaos
+        if (e.isPrimary) {
+            createRipple(e.clientX, e.clientY);
         }
-    }, true);
-
-    window.addEventListener('touchstart', (e) => {
-        const touch = e.touches[0];
-        createRipple(touch.clientX, touch.clientY);
         if (typeof KioskState !== 'undefined' && KioskState.currentState === KioskState.IDLE) {
             KioskState.transitionTo(KioskState.INTRO);
         }

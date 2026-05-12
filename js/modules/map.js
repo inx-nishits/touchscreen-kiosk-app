@@ -15,12 +15,13 @@ const MapManager = {
         hotspots.forEach(hotspot => {
             const handleAction = (e) => {
                 e.stopPropagation();
-                const poiId = hotspot.getAttribute('data-poi');
-                this.onPOISelected(poiId);
+                if (e.isPrimary) {
+                    const poiId = hotspot.getAttribute('data-poi');
+                    this.onPOISelected(poiId);
+                }
             };
             
-            hotspot.addEventListener('touchstart', handleAction);
-            hotspot.addEventListener('mousedown', handleAction);
+            hotspot.addEventListener('pointerdown', handleAction);
         });
     },
 

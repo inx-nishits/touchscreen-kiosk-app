@@ -8,6 +8,7 @@ const IntroAnimation = {
     ctx: null,
     particles: [],
     animationId: null,
+    handleSkip: null,
     
     init() {
         this.canvas = document.getElementById('intro-particles');
@@ -25,6 +26,11 @@ const IntroAnimation = {
     
     start() {
         console.log('Intro Animation Started');
+        
+        // Prevent multiple animation loops
+        if (this.animationId) {
+            cancelAnimationFrame(this.animationId);
+        }
         
         const video = document.getElementById('intro-video');
         const skipHint = document.getElementById('intro-skip-hint');
@@ -54,14 +60,14 @@ const IntroAnimation = {
             }, 60000); 
 
             // Tap to Skip Logic
-            const handleSkip = (e) => {
+            this.handleSkip = (e) => {
+                if (!e.isPrimary) return;
                 console.log("[Kiosk] Intro skipped by user");
                 KioskState.transitionTo(KioskState.MAP);
             };
 
             if (container) {
-                container.addEventListener('mousedown', handleSkip, { once: true });
-                container.addEventListener('touchstart', handleSkip, { once: true });
+                container.addEventListener('pointerdown', this.handleSkip, { once: true });
             }
         } else {
             KioskState.transitionTo(KioskState.MAP);
@@ -84,9 +90,9 @@ const IntroAnimation = {
 
         if (skipHint) skipHint.classList.remove('visible');
         
-        if (container) {
-            // Logic to remove listeners would go here, but using {once: true} 
-            // and transitioning to MAP (which hides this screen) handles it.
+        if (container && this.handleSkip) {
+            container.removeEventListener('pointerdown', this.handleSkip);
+            this.handleSkip = null;
         }
 
         if (video) {

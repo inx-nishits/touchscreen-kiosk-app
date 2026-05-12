@@ -8,6 +8,7 @@ const InactivityTimer = {
     timeLeft: 140,
     interval: null,
     displayElement: null,
+    isTimedOut: false,
     
     init() {
         this.displayElement = document.getElementById('inactivity-timer');
@@ -16,14 +17,17 @@ const InactivityTimer = {
     
     setupListeners() {
         // Global interaction listener - using capture phase to ensure we catch all events
-        const resetAction = () => this.reset();
+        const resetAction = (e) => {
+            if (e && e.type === 'pointerdown' && !e.isPrimary) return;
+            this.reset();
+        };
         
-        window.addEventListener('touchstart', resetAction, true);
-        window.addEventListener('mousedown', resetAction, true);
+        window.addEventListener('pointerdown', resetAction, true);
         window.addEventListener('kiosk-interaction', resetAction, true);
     },
     
     start() {
+        this.isTimedOut = false;
         this.reset();
         if (this.interval) clearInterval(this.interval);
         
@@ -39,11 +43,13 @@ const InactivityTimer = {
     
     stop() {
         if (this.interval) clearInterval(this.interval);
+        this.isTimedOut = false;
         this.timeLeft = this.timeoutDuration;
         this.updateDisplay();
     },
     
     reset() {
+        if (this.isTimedOut) return;
         this.timeLeft = this.timeoutDuration;
         this.updateDisplay();
     },
@@ -56,6 +62,7 @@ const InactivityTimer = {
     
     onTimeout() {
         this.stop();
+        this.isTimedOut = true; // Set this AFTER stop() since stop() resets it.
         console.warn('Session Timed Out');
         
         // Show session ended modal

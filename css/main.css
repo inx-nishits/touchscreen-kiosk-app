@@ -25,6 +25,16 @@
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
     user-select: none;
+    -webkit-user-drag: none;
+}
+
+img {
+    -webkit-user-drag: none;
+    pointer-events: none;
+}
+
+.hotspot img {
+    pointer-events: auto; /* Hotspot images still need pointer events for interaction if wrapped, but wait, the button handles the event. */
 }
 
 body, html {
@@ -32,7 +42,7 @@ body, html {
     height: 100%;
     overflow: hidden;
     background: var(--color-bg);
-    font-family: 'Outfit', 'Inter', sans-serif;
+    font-family: 'Outfit', 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     color: var(--color-text-primary);
     cursor: none; /* Hidden for Kiosk production */
     font-size: clamp(16px, 1.25vw, 32px); /* Scale with width for 4K consistency */

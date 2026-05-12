@@ -10,31 +10,27 @@ const KioskState = {
     VIDEO: 'video',
     
     currentState: 'idle',
+    isTransitioning: false,
     
     init() {
         console.log('KioskState initialized');
         this.transitionTo(this.IDLE);
-        
-        // Unified interaction listener for Idle Screen
-        const handleStart = (e) => {
-            if (this.currentState === this.IDLE) {
-                this.transitionTo(this.INTRO);
-            }
-        };
-
-        const idleScreen = document.getElementById('screen-idle');
-        idleScreen.addEventListener('touchstart', handleStart);
-        idleScreen.addEventListener('mousedown', handleStart);
     },
     
     async transitionTo(newState, data = {}) {
+        if (this.isTransitioning || this.currentState === newState) {
+            return; // Block overlapping transitions or same-state transitions
+        }
+        
         console.log(`[Kiosk] Transitioning to: ${newState}`);
+        this.isTransitioning = true;
         
         const oldScreen = document.querySelector('.screen.active');
         const newScreen = document.getElementById(`screen-${newState}`);
         
         if (!newScreen) {
             console.error(`[Kiosk] Screen NOT found: screen-${newState}`);
+            this.isTransitioning = false;
             return;
         }
         
@@ -63,6 +59,7 @@ const KioskState = {
             if (oldScreen && oldScreen !== newScreen) {
                 oldScreen.classList.remove('active');
             }
+            this.isTransitioning = false;
         }, 1000); // Wait for the 1s CSS transition defined in main.css to complete
     },
     
@@ -106,6 +103,9 @@ const KioskState = {
             case this.IDLE:
                 const video = document.getElementById('attract-video');
                 if (video) video.pause();
+                break;
+            case this.INTRO:
+                IntroAnimation.stop();
                 break;
             case this.VIDEO:
                 VideoEngine.stop();

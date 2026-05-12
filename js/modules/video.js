@@ -25,39 +25,30 @@ const VideoEngine = {
             // Home Button
             const btnHome = document.getElementById('btn-video-home');
             if (btnHome) {
-                btnHome.addEventListener('touchstart', (e) => {
+                btnHome.addEventListener('pointerdown', (e) => {
                     e.stopPropagation();
-                    KioskState.transitionTo(KioskState.IDLE);
-                });
-                btnHome.addEventListener('mousedown', (e) => {
-                    e.stopPropagation();
-                    KioskState.transitionTo(KioskState.IDLE);
+                    if (e.isPrimary) KioskState.transitionTo(KioskState.IDLE);
                 });
             }
 
             // Back to Map Button
             const btnBack = document.getElementById('btn-video-back');
             if (btnBack) {
-                btnBack.addEventListener('touchstart', (e) => {
+                btnBack.addEventListener('pointerdown', (e) => {
                     e.stopPropagation();
-                    KioskState.transitionTo(KioskState.MAP);
-                });
-                btnBack.addEventListener('mousedown', (e) => {
-                    e.stopPropagation();
-                    KioskState.transitionTo(KioskState.MAP);
+                    if (e.isPrimary) KioskState.transitionTo(KioskState.MAP);
                 });
             }
             
-            // Return to map on tap anywhere else (Touch & Click)
+            // Return to map on tap anywhere else
             const handleClose = (e) => {
                 // Ignore if clicking on navigation buttons
                 if (e.target.tagName !== 'BUTTON' && !e.target.closest('button')) {
-                    KioskState.transitionTo(KioskState.MAP);
+                    if (e.isPrimary) KioskState.transitionTo(KioskState.MAP);
                 }
             };
             
-            this.player.parentElement.addEventListener('touchstart', handleClose);
-            this.player.parentElement.addEventListener('mousedown', handleClose);
+            this.player.parentElement.addEventListener('pointerdown', handleClose);
         }
     },
     
@@ -80,11 +71,21 @@ const VideoEngine = {
 
             const videoSrc = videoMap[poiId] || `assets/videos/${poiId}.mp4`;
             
-            // Set up one-time playing listener
-            const onPlaying = () => {
+            let isResolved = false;
+            let fallbackTimer = null;
+            
+            const handleResolve = () => {
+                if (isResolved) return;
+                isResolved = true;
                 this.player.removeEventListener('playing', onPlaying);
+                if (fallbackTimer) clearTimeout(fallbackTimer);
                 resolve();
             };
+
+            const onPlaying = () => {
+                handleResolve();
+            };
+            
             this.player.addEventListener('playing', onPlaying);
             
             this.player.pause();
@@ -95,12 +96,12 @@ const VideoEngine = {
             if (playPromise !== undefined) {
                 playPromise.catch(error => {
                     console.warn("[Kiosk] Auto-play retry...", error);
-                    this.player.play();
+                    this.player.play().catch(() => handleResolve());
                 });
             }
 
             // Fallback for missing videos: resolve after a short delay so transition isn't blocked
-            setTimeout(resolve, 2000); 
+            fallbackTimer = setTimeout(handleResolve, 2000); 
         });
     },
     
