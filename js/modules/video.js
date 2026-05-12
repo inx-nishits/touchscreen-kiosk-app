@@ -68,12 +68,17 @@ const VideoEngine = {
             
             // Map POI IDs to specific filenames
             const videoMap = {
+                'holy-forty-martyrs': 'assets/videos/holy-forty-martyrs.mp4',
+                'chilandar': 'assets/videos/chilandar.mp4',
+                'hagia-sophia': 'assets/videos/hagia-sophia.mp4',
+                'hagios-demetrios': 'assets/videos/hagios-demetrios.mp4',
+                'church-holy-sepulchre': 'assets/videos/church-holy-sepulchre.mp4',
+                'mar-saba': 'assets/videos/mar-saba.mp4',
                 'trip': 'assets/videos/trip.mp4',
-                'mytobahe': 'assets/videos/mytobahe.mp4',
-                'holy-forty-martyrs': 'assets/videos/putovanje-svetog-save-ekran.mp4'
+                'mytobahe': 'assets/videos/mytobahe.mp4'
             };
 
-            const videoSrc = videoMap[poiId] || `assets/videos/poi-${poiId}.mp4`;
+            const videoSrc = videoMap[poiId] || `assets/videos/${poiId}.mp4`;
             
             // Set up one-time playing listener
             const onPlaying = () => {

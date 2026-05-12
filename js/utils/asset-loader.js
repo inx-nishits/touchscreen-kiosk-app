@@ -18,7 +18,15 @@ const AssetLoader = {
         ],
         videos: [
             'assets/videos/beginning-video.mp4',
-            'assets/videos/idle-screen.mp4'
+            'assets/videos/idle-screen.mp4',
+            'assets/videos/holy-forty-martyrs.mp4',
+            'assets/videos/chilandar.mp4',
+            'assets/videos/hagia-sophia.mp4',
+            'assets/videos/hagios-demetrios.mp4',
+            'assets/videos/church-holy-sepulchre.mp4',
+            'assets/videos/mar-saba.mp4',
+            'assets/videos/trip.mp4',
+            'assets/videos/mytobahe.mp4'
         ]
     },
     
