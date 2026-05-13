@@ -175,10 +175,10 @@ body, html {
 
 .hotspot {
     position: absolute;
-    width: 5.5vw; /* Optimized size to prevent overlap */
-    height: 5.5vw;
-    min-width: 100px;
-    min-height: 100px;
+    width: 6.3vw; /* Total 15% increase (5.5vw -> 6.3vw) */
+    height: 6.3vw;
+    min-width: 115px; /* Total 15% increase (100px -> 115px) */
+    min-height: 115px;
     background: transparent;
     border: none;
     backdrop-filter: none;
@@ -239,13 +239,13 @@ body, html {
 }
 
 .hotspot.trip-icon {
-    width: 8.5vw;
-    height: 8.5vw;
-    min-width: 140px;
-    min-height: 140px;
+    width: 10vw; /* Increased to 10% of screen width */
+    height: 7vw;
+    min-width: 180px;
+    min-height: 120px;
     background: transparent;
     border: none;
-    padding: 1.5vw;
+    padding: 0;
     animation: icon-pulsating 3s infinite ease-in-out !important;
     box-shadow: none !important;
 }
