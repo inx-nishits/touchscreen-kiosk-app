@@ -65,18 +65,7 @@ const InactivityTimer = {
         this.isTimedOut = true; // Set this AFTER stop() since stop() resets it.
         console.warn('Session Timed Out');
         
-        // Show session ended modal
-        const modal = document.getElementById('session-ended');
-        if (modal) {
-            modal.classList.add('active');
-            
-            setTimeout(() => {
-                modal.classList.remove('active');
-                KioskState.transitionTo(KioskState.IDLE);
-            }, 3000);
-        } else {
-            KioskState.transitionTo(KioskState.IDLE);
-        }
+        KioskState.transitionTo(KioskState.IDLE);
     }
 };
 

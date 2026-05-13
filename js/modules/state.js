@@ -34,8 +34,6 @@ const KioskState = {
             return;
         }
         
-        this.handleExit(this.currentState);
-        
         // If we're going to video, pre-start the player to avoid black flash
         if (newState === this.VIDEO && data.poiId) {
             await VideoEngine.playPOI(data.poiId);
@@ -43,6 +41,8 @@ const KioskState = {
 
         // Pure Seamless Cross-fade: Add active to new, remove from old after transition
         newScreen.classList.add('active');
+        newScreen.style.zIndex = '30'; // Force new screen on top during transition
+        
         const oldState = this.currentState;
         this.currentState = newState;
         
@@ -50,8 +50,7 @@ const KioskState = {
         if (newState !== this.VIDEO) {
             this.handleEntry(newState, data);
         } else {
-            // Video is already playing, just start inactivity timer
-            InactivityTimer.start();
+            // Video is already playing
             window.dispatchEvent(new CustomEvent('kiosk-interaction'));
         }
         
@@ -59,13 +58,15 @@ const KioskState = {
             if (oldScreen && oldScreen !== newScreen) {
                 oldScreen.classList.remove('active');
             }
+            newScreen.style.zIndex = ''; // Reset z-index
+            this.handleExit(oldState);
             this.isTransitioning = false;
         }, 1000); // Wait for the 1s CSS transition defined in main.css to complete
     },
     
     handleEntry(state, data) {
-        // Start timer for any screen that is not IDLE
-        if (state !== this.IDLE) {
+        // Start timer for interactive screens (MAP, INTRO), but NOT for IDLE or VIDEO
+        if (state !== this.IDLE && state !== this.VIDEO) {
             InactivityTimer.start();
         }
 
@@ -85,15 +86,12 @@ const KioskState = {
                 break;
                 
             case this.VIDEO:
-                if (data.poiId) {
-                    VideoEngine.playPOI(data.poiId);
-                }
-                // Timer already started above
+                // Note: transitionTo handles pre-playing the video
                 break;
         }
         
-        // Reset timer on any interaction in active states
-        if (state !== this.IDLE) {
+        // Reset timer on any interaction in active interactive states
+        if (state !== this.IDLE && state !== this.VIDEO) {
             window.dispatchEvent(new CustomEvent('kiosk-interaction'));
         }
     },

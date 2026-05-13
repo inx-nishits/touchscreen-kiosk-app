@@ -1,83 +1,99 @@
-# Touchscreen Kiosk: Setup & Operations Guide
+# 4K Touchscreen Kiosk: Technical Setup & Operations Guide
 
-This guide provides step-by-step instructions for the on-site exhibition technical team to properly set up, launch, and secure the interactive 4K touchscreen kiosk application.
-
----
-
-## 1. System Requirements
-
-*   **Operating System:** Windows 10 or Windows 11
-*   **Browser:** Google Chrome (Latest Version)
-*   **Hardware:** Touchscreen display supporting 4K resolution (3840 x 2160)
-*   **Network:** No internet connection required. The application runs 100% offline.
+This document provides a comprehensive guide for setting up and maintaining the **Bulgarian Heritage 4K Kiosk Application**. Follow these instructions to ensure the application runs smoothly, securely, and without interruption in a public exhibition environment.
 
 ---
 
-## 2. Initial Installation
+## 1. Hardware & System Requirements
 
-The kiosk application requires no formal "installation" (no `.exe` to install). It runs directly from the provided folder.
+For a professional, high-performance experience, the kiosk PC must meet these minimum specifications:
 
-1.  Copy the entire **`Touchscreen-kiosk-app`** folder from the delivery USB drive.
-2.  Paste the folder onto the kiosk PC's internal storage (We recommend placing it in `C:\KioskApp\`).
-3.  Ensure the folder contains all files, including `index.html`, the `assets/` folder, and the `.bat` scripts.
-
----
-
-## 3. Launching the Kiosk Application
-
-To ensure the application runs perfectly fullscreen and cannot be closed or broken by public visitors, you **must** use the provided startup script. 
-
-**Do NOT double-click the `index.html` file directly.**
-
-### How to Start:
-1. Navigate to the folder where you copied the application (e.g., `C:\KioskApp\`).
-2. Double-click the file named **`start-kiosk.bat`**.
-3. A black command prompt window will briefly appear, wait 5 seconds, and then Google Chrome will launch in an aggressive, locked-down fullscreen mode.
-
-### What the Startup Script Does:
-*   Forces absolute fullscreen (hides the URL bar, tabs, and Windows taskbar).
-*   Disables pinch-to-zoom touch gestures.
-*   Disables edge-swipe browser navigation (preventing visitors from swiping "back" to a blank page).
-*   Runs in incognito mode to ensure a fresh session upon every launch.
+*   **Operating System:** Windows 10 or 11 (Pro version recommended for easier management).
+*   **Storage:** **SSD (NVMe or SATA)** is strictly required. Running the app from a slow HDD or USB drive will cause video stuttering.
+*   **Monitor:** 4K Touchscreen (3840 x 2160).
+*   **Display Settings:** Windows Scaling must be set to **100%**. 
+    *   *Settings > System > Display > Scale and layout > 100%*
+*   **Network:** Not required. The application runs **100% offline**.
 
 ---
 
-## 4. How to Exit Kiosk Mode (Maintenance)
+## 2. Initial Installation & Directory Setup
 
-Because the application is locked down, there are no "X" buttons to close the window. To perform maintenance or update the PC:
+The kiosk application runs as a "Portable" app and does not require a traditional installer.
 
-1. Plug a physical USB keyboard into the kiosk machine.
-2. Press **`Alt + F4`** (or **`Ctrl + W`**) on the keyboard to instantly close the browser.
-3. Alternatively, you can press the **`Windows Key`** to bring up the start menu.
-4. If you need to force close it manually, double-click the included **`force-close-kiosk.bat`** file from the folder.
-
----
-
-## 5. Setting up "Auto-Start" on PC Boot (Highly Recommended)
-
-For an exhibition environment, the application should automatically launch if the PC reboots or loses power.
-
-1.  Press `Windows Key + R` on the keyboard to open the "Run" dialog.
-2.  Type **`shell:startup`** and press Enter. This opens the Windows Startup folder.
-3.  Navigate back to your kiosk folder (`C:\KioskApp\`).
-4.  **Right-click** on `start-kiosk.bat` and select **"Create Shortcut"**.
-5.  Drag and drop that newly created shortcut into the `shell:startup` folder you opened in Step 2.
-6.  *Test it:* Restart the PC. Windows will boot, load the desktop, and within 10 seconds, the kiosk will automatically launch fullscreen.
+1.  Copy the folder **`Touchscreen-kiosk-app`** to the internal drive of the kiosk PC.
+2.  **Recommended Path:** `C:\KioskApp\`
+3.  Ensure the folder contains:
+    *   `index.html` (The main application file)
+    *   `assets/videos/` (All 4K video content)
+    *   `start-kiosk.bat` (The startup script)
+    *   `force-close-kiosk.bat` (The emergency exit script)
 
 ---
 
-## 6. Windows OS Lockdown Recommendations
+## 3. Launching in Production Mode
 
-To prevent visitors from accidentally disrupting the kiosk, please apply the following Windows settings:
+To ensure the app is locked down and the browser "Exit" or "ESC" messages are suppressed, you **must** use the provided startup script.
 
-*   **Disable Notifications:** Go to Windows Settings > System > Focus Assist and turn it to "Alarms Only" to prevent pop-up notifications.
-*   **Disable Screen Sleep:** Go to Power Options and set "Turn off display" and "Put the computer to sleep" to **Never**.
-*   **Disable Edge Swipes:** If users accidentally open the Windows notification panel by swiping from the extreme right edge of the monitor, disable edge gestures via the Windows Registry or Group Policy.
+### Launch Instructions:
+1.  Navigate to `C:\KioskApp\`.
+2.  Double-click **`start-kiosk.bat`**.
+3.  Wait 5 seconds. Google Chrome will launch in a dedicated "Kiosk Mode" with all toolbars, tabs, and Windows menus hidden.
+
+### What this script does:
+*   **Full Lockdown:** Hides all browser UI and prevents users from "swiping back."
+*   **Autoplay Enforcement:** Bypasses browser security to allow videos to play instantly without a user touch.
+*   **Local Access:** Allows the browser to read the local 4K video files from your hard drive safely.
+*   **Isolated Profile:** Uses a dedicated temporary profile so it won't interfere with any other Chrome windows.
+
+---
+
+## 4. Video Playback Behavior
+
+The application has been specifically tuned for museum-style viewing:
+
+*   **Full Viewing:** Once a video starts, the "Auto-Reset" timer is paused. The video will play to the very end without interruption, even if it is very long.
+*   **Manual Interrupt:** If a visitor touches the screen *while* a video is playing, the app will instantly return to the 8-POI Map screen.
+*   **Auto-Reset:** If the kiosk is left idle on the Map screen for **120 seconds**, it will automatically transition back to the "Attract Video" (Idle Screen) for the next visitor.
+
+---
+
+## 5. Maintenance & Content Updates
+
+### Updating Videos:
+To replace a video, simply name your new file exactly like the existing one in `assets/videos/` and overwrite it.
+*   **Recommended Format:** MP4 (H.264)
+*   **Recommended Bitrate:** 25-30 Mbps for 4K.
+*   **Optimization:** For fastest loading, ensure your MP4 is exported with the **"Fast Start"** or **"Moov Atom at Start"** option enabled.
+
+### Closing the App:
+Since there is no "X" button, you must use a keyboard:
+1.  Connect a USB keyboard.
+2.  Press **`Alt + F4`** to close the browser.
+3.  Alternatively, run the **`force-close-kiosk.bat`** file from the folder.
+
+---
+
+## 6. Windows OS Lockdown (Highly Recommended)
+
+To prevent Windows from interfering with the exhibition:
+
+1.  **Disable Sleep:** Go to *Power & Sleep* settings and set both Screen and Sleep to **Never**.
+2.  **Disable Notifications:** Enable "Focus Assist" in the Windows Action Center and set it to "Alarms Only."
+3.  **Disable Updates:** Pause Windows Updates or set an "Active Hours" window that is outside of exhibition hours.
+4.  **Hide Taskbar:** Although Kiosk Mode hides the taskbar, we recommend setting it to "Automatically hide the taskbar in desktop mode" for extra safety.
+5.  **Auto-Start on Boot:**
+    *   Press `Win + R`, type `shell:startup`, and press Enter.
+    *   Create a **Shortcut** to `start-kiosk.bat` and drag it into that folder.
+    *   The kiosk will now launch automatically whenever the computer is turned on.
 
 ---
 
 ## Troubleshooting
 
-*   **Videos are black or not playing:** Ensure you launched the app via `start-kiosk.bat`. Browsers block auto-playing video if launched normally.
-*   **The screen looks zoomed in or cut off:** Ensure your Windows Display Scaling (Settings > Display > Scale and layout) is set to **100%**. Do not use 150% or 300% scaling.
-*   **Updating Content:** To update a video, simply replace the corresponding `.mp4` file in the `assets/videos/` folder. Keep the file name exactly the same. No code updates are required.
+| Issue | Solution |
+| :--- | :--- |
+| **"Press ESC to exit" message appears** | This happens if you used `F11` or clicked a button to go fullscreen. Always use the `start-kiosk.bat` to avoid this browser message. |
+| **Video stutters or drops frames** | Ensure the files are on an **SSD** and the computer's **Hardware Acceleration** is turned on in Chrome settings. |
+| **The screen is cut off** | Ensure Windows Display Scale is at **100%**. If it's at 150% or 300%, the 4K layout will be too large. |
+| **Video doesn't play on first load** | The `start-kiosk.bat` includes a 5-second wait to let the Windows Audio service start first. If audio isn't ready, the video might pause. |

@@ -77,29 +77,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return false;
     };
 
-    // Kiosk Fullscreen Toggle (Triple tap top right)
-    const kioskTools = document.getElementById('kiosk-tools');
-    let tapCount = 0;
-    let tapTimer = null;
-    
-    if (kioskTools) {
-        kioskTools.addEventListener('click', () => {
-            tapCount++;
-            clearTimeout(tapTimer);
-            tapTimer = setTimeout(() => { tapCount = 0; }, 500);
-            
-            if (tapCount >= 3) {
-                if (!document.fullscreenElement) {
-                    document.documentElement.requestFullscreen().catch(err => {
-                        console.error(`Error attempting to enable full-screen mode: ${err.message}`);
-                    });
-                } else {
-                    document.exitFullscreen();
-                }
-                tapCount = 0;
-            }
-        });
-    }
 
     // Performance: Pre-warm animations
     document.body.classList.add('ready');
